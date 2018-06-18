@@ -116,6 +116,8 @@ class BatchData(ProxyDataFlow):
         """
         holder = []
         for data in self.ds.get_data():
+            if len(data) <= 0:
+                continue
             holder.append(data)
             if len(holder) == self.batch_size:
                 yield BatchData._aggregate_batch(holder, self.use_list)
