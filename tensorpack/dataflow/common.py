@@ -116,8 +116,6 @@ class BatchData(ProxyDataFlow):
         """
         holder = []
         for data in self.ds.get_data():
-            if len(data) <= 0:
-                continue
             holder.append(data)
             if len(holder) == self.batch_size:
                 yield BatchData._aggregate_batch(holder, self.use_list)
@@ -212,7 +210,10 @@ class BatchDataSequence(ProxyDataFlowSequence):
             data = self.ds[id*self.batch_size + i]
             holder.append(data)
 
-        return BatchData._aggregate_batch(holder, self.use_list)
+        if len(holder) <= 0:
+            return None
+
+        return BatchDataSequence._aggregate_batch(holder, self.use_list)
 
     @staticmethod
     def _aggregate_batch(data_holder, use_list=False):
